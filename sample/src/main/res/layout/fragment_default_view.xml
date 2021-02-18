@@ -1,18 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@color/colorPrimary"
+    android:orientation="vertical"
     tools:context=".samples.DefaultViewFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/shape_fragment_background">
 
         <FrameLayout
@@ -27,13 +27,13 @@
                 android:id="@+id/titleDefaultTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="3"
-                android:ellipsize="end"
                 android:text="@string/default_fragment_title"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
@@ -44,24 +44,24 @@
             android:id="@+id/descriptionDefaultTv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:gravity="center_horizontal"
             android:text="@string/default_fragment_description"
-            app:layout_constraintTop_toBottomOf="@+id/titleAnimateContainer"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/titleAnimateContainer" />
 
         <com.stfalcon.swipeablebutton.SwipeableButton
             android:id="@+id/customSwipeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            app:durationAnimation="150"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="64dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:durationAnimation="150"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
