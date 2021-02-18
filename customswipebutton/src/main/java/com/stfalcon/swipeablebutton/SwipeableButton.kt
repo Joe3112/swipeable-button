@@ -177,6 +177,11 @@ open class SwipeableButton @JvmOverloads constructor(
         }
 
     /**
+     *  Set if text should be always centered, otherwise the text position will be animated.
+     */
+    var centerText: Boolean = true
+
+    /**
      * The size of displaying text
      * */
     var textSize: Float =
@@ -305,14 +310,18 @@ open class SwipeableButton @JvmOverloads constructor(
      * Setting initial padding text in unchecked state
      * */
     private fun setTextStartTextPadding() {
-        buttonSwipeableTv.setPadding(0, 0, slidingButtonIv.width, 0)
+        if (centerText.not()) {
+            buttonSwipeableTv.setPadding(0, 0, slidingButtonIv.width, 0)
+        }
     }
 
     /**
      * Setting initial padding text in checked state
      * */
     private fun setTextEndTextPadding() {
-        buttonSwipeableTv.setPadding(slidingButtonIv.width, 0, 0, 0)
+        if (centerText.not()) {
+            buttonSwipeableTv.setPadding(slidingButtonIv.width, 0, 0, 0)
+        }
     }
 
     /**
@@ -355,21 +364,28 @@ open class SwipeableButton @JvmOverloads constructor(
         animateBackgroundChange(StateChangeDirection.CHECKED_UNCHECKED)
         animateToggleChange(StateChangeDirection.CHECKED_UNCHECKED)
 
+        val animations = mutableListOf<Animator>()
+
         val colorAnimation =
                 ValueAnimator.ofObject(ArgbEvaluator(), checkedTextColor, uncheckedTextColor)
         colorAnimation.duration = animationDuration
         colorAnimation.addUpdateListener { animator -> buttonSwipeableTv.setTextColor(animator.animatedValue as Int) }
+        animations.add(colorAnimation)
 
         val positionAnimator = ValueAnimator.ofFloat(slidingButtonIv.x, 0F)
         positionAnimator.duration = animationDuration
         positionAnimator.addUpdateListener {
             slidingButtonIv.x = positionAnimator.animatedValue as Float
         }
+        animations.add(positionAnimator)
 
-        val paddingAnimation = ValueAnimator.ofInt(0, slidingButtonIv.width)
-        paddingAnimation.duration = animationDuration
-        paddingAnimation.addUpdateListener {
-            buttonSwipeableTv.setPadding(it.animatedValue as Int, 0, 0, 0)
+        if (centerText.not()) {
+            val paddingAnimation = ValueAnimator.ofInt(0, slidingButtonIv.width)
+            paddingAnimation.duration = animationDuration
+            paddingAnimation.addUpdateListener {
+                buttonSwipeableTv.setPadding(it.animatedValue as Int, 0, 0, 0)
+            }
+            animations.add(paddingAnimation)
         }
 
         val alphaAnimation = ValueAnimator.ofFloat(1F, 0F, 1F)
@@ -382,6 +398,7 @@ open class SwipeableButton @JvmOverloads constructor(
             }
             buttonSwipeableTv.alpha = alphaAnimation.animatedValue as Float
         }
+        animations.add(alphaAnimation)
 
         animatorSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
@@ -395,7 +412,7 @@ open class SwipeableButton @JvmOverloads constructor(
         })
 
         positionAnimator.interpolator = AccelerateDecelerateInterpolator()
-        animatorSet.playTogether(positionAnimator, colorAnimation, alphaAnimation, paddingAnimation)
+        animatorSet.playTogether(animations)
         animatorSet.start()
     }
 
@@ -408,10 +425,13 @@ open class SwipeableButton @JvmOverloads constructor(
         animateBackgroundChange(StateChangeDirection.UNCHECKED_CHECKED)
         animateToggleChange(StateChangeDirection.UNCHECKED_CHECKED)
 
+        val animations = mutableListOf<Animator>()
+
         val colorAnimation =
                 ValueAnimator.ofObject(ArgbEvaluator(), uncheckedTextColor, checkedTextColor)
         colorAnimation.duration = animationDuration
         colorAnimation.addUpdateListener { animator -> buttonSwipeableTv.setTextColor(animator.animatedValue as Int) }
+        animations.add(colorAnimation)
 
         val positionAnimator = ValueAnimator.ofFloat(
                 slidingButtonIv.x,
@@ -421,6 +441,7 @@ open class SwipeableButton @JvmOverloads constructor(
         positionAnimator.addUpdateListener {
             slidingButtonIv.x = positionAnimator.animatedValue as Float
         }
+        animations.add(positionAnimator)
 
         val alphaAnimation = ValueAnimator.ofFloat(1F, 0F, 1F)
         alphaAnimation.duration = animationDuration
@@ -432,11 +453,15 @@ open class SwipeableButton @JvmOverloads constructor(
             }
             buttonSwipeableTv.alpha = alphaAnimation.animatedValue as Float
         }
+        animations.add(alphaAnimation)
 
-        val paddingAnimation = ValueAnimator.ofInt(0, slidingButtonIv.width)
-        paddingAnimation.duration = animationDuration
-        paddingAnimation.addUpdateListener {
-            buttonSwipeableTv.setPadding(0, 0, it.animatedValue as Int, 0)
+        if (centerText.not()) {
+            val paddingAnimation = ValueAnimator.ofInt(0, slidingButtonIv.width)
+            paddingAnimation.duration = animationDuration
+            paddingAnimation.addUpdateListener {
+                buttonSwipeableTv.setPadding(0, 0, it.animatedValue as Int, 0)
+            }
+            animations.add(paddingAnimation)
         }
 
         animatorSet.addListener(object : AnimatorListenerAdapter() {
@@ -451,7 +476,7 @@ open class SwipeableButton @JvmOverloads constructor(
         })
 
         positionAnimator.interpolator = AccelerateDecelerateInterpolator()
-        animatorSet.playTogether(positionAnimator, colorAnimation, alphaAnimation, paddingAnimation)
+        animatorSet.playTogether(animations)
         animatorSet.start()
     }
 
