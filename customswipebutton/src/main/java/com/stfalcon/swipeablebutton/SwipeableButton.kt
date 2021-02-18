@@ -11,11 +11,13 @@ import android.view.MotionEvent
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.button_swipe.view.*
 
 open class SwipeableButton @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
     companion object {
@@ -27,6 +29,12 @@ open class SwipeableButton @JvmOverloads constructor(
     var onSwipedListener: (() -> Unit)? = null
     var onSwipedOnListener: (() -> Unit)? = null
     var onSwipedOffListener: (() -> Unit)? = null
+
+    val backgroundTextView: TextView
+        get() = buttonSwipeableTv
+
+    val slidingButton: ImageView
+        get() = slidingButtonIv
 
     /**
      * Current state
@@ -132,7 +140,7 @@ open class SwipeableButton @JvmOverloads constructor(
      * Background of swipeable button that displays when button is unchecked
      * */
     var uncheckedToggleBackground: Drawable? =
-        ContextCompat.getDrawable(context, R.drawable.shape_unchecked_toggle)
+            ContextCompat.getDrawable(context, R.drawable.shape_unchecked_toggle)
         set(uncheckedToggleBackground) {
             field = uncheckedToggleBackground
             updateState()
@@ -142,7 +150,7 @@ open class SwipeableButton @JvmOverloads constructor(
      * Background of swipeable button that displays when button is checked
      * */
     var checkedToggleBackground: Drawable? =
-        ContextCompat.getDrawable(context, R.drawable.shape_checked_toggle)
+            ContextCompat.getDrawable(context, R.drawable.shape_checked_toggle)
         set(checkedToggleBackground) {
             field = checkedToggleBackground
             updateState()
@@ -152,7 +160,7 @@ open class SwipeableButton @JvmOverloads constructor(
      * Background that displays when button is unchecked
      * */
     var uncheckedBackground: Drawable? =
-        ContextCompat.getDrawable(context, R.drawable.shape_scrolling_view_unchecked)
+            ContextCompat.getDrawable(context, R.drawable.shape_scrolling_view_unchecked)
         set(uncheckedBackground) {
             field = uncheckedBackground
             updateState()
@@ -162,7 +170,7 @@ open class SwipeableButton @JvmOverloads constructor(
      * Background that displays when button is checked
      * */
     var checkedBackground: Drawable? =
-        ContextCompat.getDrawable(context, R.drawable.shape_scrolling_view_checked)
+            ContextCompat.getDrawable(context, R.drawable.shape_scrolling_view_checked)
         set(checkedBackground) {
             field = checkedBackground
             updateState()
@@ -172,7 +180,7 @@ open class SwipeableButton @JvmOverloads constructor(
      * The size of displaying text
      * */
     var textSize: Float =
-        context.resources.getDimensionPixelSize(R.dimen.default_text_size).toFloat()
+            context.resources.getDimensionPixelSize(R.dimen.default_text_size).toFloat()
         set(textSize) {
             field = textSize
             updateState()
@@ -327,8 +335,8 @@ open class SwipeableButton @JvmOverloads constructor(
     private fun returnToggleToEnd() {
         val animatorSet = AnimatorSet()
         val positionAnimator = ValueAnimator.ofFloat(
-            slidingButtonIv.x,
-            (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
+                slidingButtonIv.x,
+                (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
         )
         positionAnimator.duration = animationDuration
         positionAnimator.addUpdateListener {
@@ -348,7 +356,7 @@ open class SwipeableButton @JvmOverloads constructor(
         animateToggleChange(StateChangeDirection.CHECKED_UNCHECKED)
 
         val colorAnimation =
-            ValueAnimator.ofObject(ArgbEvaluator(), checkedTextColor, uncheckedTextColor)
+                ValueAnimator.ofObject(ArgbEvaluator(), checkedTextColor, uncheckedTextColor)
         colorAnimation.duration = animationDuration
         colorAnimation.addUpdateListener { animator -> buttonSwipeableTv.setTextColor(animator.animatedValue as Int) }
 
@@ -401,13 +409,13 @@ open class SwipeableButton @JvmOverloads constructor(
         animateToggleChange(StateChangeDirection.UNCHECKED_CHECKED)
 
         val colorAnimation =
-            ValueAnimator.ofObject(ArgbEvaluator(), uncheckedTextColor, checkedTextColor)
+                ValueAnimator.ofObject(ArgbEvaluator(), uncheckedTextColor, checkedTextColor)
         colorAnimation.duration = animationDuration
         colorAnimation.addUpdateListener { animator -> buttonSwipeableTv.setTextColor(animator.animatedValue as Int) }
 
         val positionAnimator = ValueAnimator.ofFloat(
-            slidingButtonIv.x,
-            (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
+                slidingButtonIv.x,
+                (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
         )
         positionAnimator.duration = animationDuration
         positionAnimator.addUpdateListener {
@@ -467,11 +475,11 @@ open class SwipeableButton @JvmOverloads constructor(
         val animatorSet = AnimatorSet()
 
         val positionAnimator =
-            ValueAnimator.ofFloat(
-                (buttonSwipeableView.width - slidingButtonIv.width).toFloat(),
-                ((buttonSwipeableView.width - slidingButtonIv.width) - (slidingButtonIv.width / 2)).toFloat(),
-                (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
-            )
+                ValueAnimator.ofFloat(
+                        (buttonSwipeableView.width - slidingButtonIv.width).toFloat(),
+                        ((buttonSwipeableView.width - slidingButtonIv.width) - (slidingButtonIv.width / 2)).toFloat(),
+                        (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
+                )
         positionAnimator.addUpdateListener {
             slidingButtonIv.x = positionAnimator.animatedValue as Float
         }
@@ -486,11 +494,11 @@ open class SwipeableButton @JvmOverloads constructor(
         val animatorSet = AnimatorSet()
 
         val positionAnimator =
-            ValueAnimator.ofFloat(
-                0F,
-                (slidingButtonIv.width / 2).toFloat(),
-                0F
-            )
+                ValueAnimator.ofFloat(
+                        0F,
+                        (slidingButtonIv.width / 2).toFloat(),
+                        0F
+                )
         positionAnimator.addUpdateListener {
             slidingButtonIv.x = positionAnimator.animatedValue as Float
         }
@@ -546,10 +554,10 @@ open class SwipeableButton @JvmOverloads constructor(
         val newCoordinates = slidingButtonIv.x + event.x
 
         if (slidingButtonIv.x >= 0
-            && newCoordinates + slidingButtonIv.width / 2 < width
+                && newCoordinates + slidingButtonIv.width / 2 < width
         ) {
             if (slidingButtonIv.x + slidingButtonIv.width / 2 < newCoordinates
-                || newCoordinates - slidingButtonIv.width / 2 > buttonSwipeableView.x
+                    || newCoordinates - slidingButtonIv.width / 2 > buttonSwipeableView.x
             ) {
                 slidingButtonIv.x = newCoordinates - slidingButtonIv.width / 2
             }
@@ -583,122 +591,122 @@ open class SwipeableButton @JvmOverloads constructor(
         isClickToSwipeEnable =
                 typedArray.getBoolean(R.styleable.SwipeableButton_isClickToSwipeEnable, true)
         swipeProgressToFinish = typedArray.getFloat(
-            R.styleable.SwipeableButton_thresholdEnd,
-            swipeProgressToFinish.toFloat()
+                R.styleable.SwipeableButton_thresholdEnd,
+                swipeProgressToFinish.toFloat()
         ).toDouble()
         swipeProgressToStart = 1 - typedArray.getFloat(
-            R.styleable.SwipeableButton_thresholdStart,
-            swipeProgressToStart.toFloat()
+                R.styleable.SwipeableButton_thresholdStart,
+                swipeProgressToStart.toFloat()
         ).toDouble()
 
         checkedText = typedArray.getString(R.styleable.SwipeableButton_textChecked)
                 ?: context.getString(
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_textChecked,
-                R.string.checked_text
-            )
-        )
+                        typedArray.getResourceId(
+                                R.styleable.SwipeableButton_textChecked,
+                                R.string.checked_text
+                        )
+                )
 
         uncheckedText = typedArray.getString(R.styleable.SwipeableButton_textUnchecked)
                 ?: context.getString(
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_textUnchecked,
-                R.string.unchecked_text
-            )
-        )
+                        typedArray.getResourceId(
+                                R.styleable.SwipeableButton_textUnchecked,
+                                R.string.unchecked_text
+                        )
+                )
 
         checkedTextColor =
                 if (typedArray.getInt(R.styleable.SwipeableButton_textColorChecked, 0) != 0) {
                     typedArray.getInt(R.styleable.SwipeableButton_textColorChecked, 0)
                 } else {
                     ContextCompat.getColor(
-                        context,
-                        typedArray.getResourceId(
-                            R.styleable.SwipeableButton_textColorChecked,
-                            android.R.color.white
-                        )
+                            context,
+                            typedArray.getResourceId(
+                                    R.styleable.SwipeableButton_textColorChecked,
+                                    android.R.color.white
+                            )
                     )
                 }
 
         uncheckedTextColor =
                 if (typedArray.getInt(
-                        R.styleable.SwipeableButton_textColorUnChecked,
-                        0
-                    ) != 0
+                                R.styleable.SwipeableButton_textColorUnChecked,
+                                0
+                        ) != 0
                 ) {
                     typedArray.getInt(R.styleable.SwipeableButton_textColorUnChecked, 0)
                 } else {
                     ContextCompat.getColor(
-                        context,
-                        typedArray.getResourceId(
-                            R.styleable.SwipeableButton_textColorUnChecked,
-                            android.R.color.black
-                        )
+                            context,
+                            typedArray.getResourceId(
+                                    R.styleable.SwipeableButton_textColorUnChecked,
+                                    android.R.color.black
+                            )
                     )
                 }
 
         checkedIcon = typedArray.getDrawable(R.styleable.SwipeableButton_checkedIcon)
                 ?: ContextCompat.getDrawable(
-            context,
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_checkedIcon,
-                R.drawable.ic_stop
-            )
-        )
+                        context,
+                        typedArray.getResourceId(
+                                R.styleable.SwipeableButton_checkedIcon,
+                                R.drawable.ic_stop
+                        )
+                )
         uncheckedIcon = typedArray.getDrawable(R.styleable.SwipeableButton_uncheckedIcon)
                 ?: ContextCompat.getDrawable(
-            context,
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_uncheckedIcon,
-                R.drawable.ic_play
-            )
-        )
+                        context,
+                        typedArray.getResourceId(
+                                R.styleable.SwipeableButton_uncheckedIcon,
+                                R.drawable.ic_play
+                        )
+                )
 
         uncheckedToggleBackground = ContextCompat.getDrawable(
-            context,
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_uncheckedToggleBackground,
-                R.drawable.shape_unchecked_toggle
-            )
+                context,
+                typedArray.getResourceId(
+                        R.styleable.SwipeableButton_uncheckedToggleBackground,
+                        R.drawable.shape_unchecked_toggle
+                )
         )
 
         checkedToggleBackground = ContextCompat.getDrawable(
-            context,
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_checkedToggleBackground,
-                R.drawable.shape_checked_toggle
-            )
+                context,
+                typedArray.getResourceId(
+                        R.styleable.SwipeableButton_checkedToggleBackground,
+                        R.drawable.shape_checked_toggle
+                )
         )
 
         checkedBackground = ContextCompat.getDrawable(
-            context,
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_checkedBackground,
-                R.drawable.shape_scrolling_view_checked
-            )
+                context,
+                typedArray.getResourceId(
+                        R.styleable.SwipeableButton_checkedBackground,
+                        R.drawable.shape_scrolling_view_checked
+                )
         )
         uncheckedBackground = ContextCompat.getDrawable(
-            context,
-            typedArray.getResourceId(
-                R.styleable.SwipeableButton_uncheckedBackground,
-                R.drawable.shape_scrolling_view_unchecked
-            )
+                context,
+                typedArray.getResourceId(
+                        R.styleable.SwipeableButton_uncheckedBackground,
+                        R.drawable.shape_scrolling_view_unchecked
+                )
         )
 
         textSize = if (typedArray.getDimensionPixelSize(
-                R.styleable.SwipeableButton_textSize,
-                0
-            ) != 0
+                        R.styleable.SwipeableButton_textSize,
+                        0
+                ) != 0
         ) {
             typedArray.getDimensionPixelSize(R.styleable.SwipeableButton_textSize, 0)
-                .toFloat()
+                    .toFloat()
         } else {
             context.resources.getDimensionPixelSize(R.dimen.default_text_size).toFloat()
         }
 
         animationDuration = typedArray.getFloat(
-            R.styleable.SwipeableButton_durationAnimation,
-            animationDuration.toFloat()
+                R.styleable.SwipeableButton_durationAnimation,
+                animationDuration.toFloat()
         ).toLong()
 
         typedArray.recycle()
