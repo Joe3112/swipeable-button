@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -422,7 +423,7 @@ open class SwipeableButton @JvmOverloads constructor(
     private fun animateToggleToEnd() {
         val positionAnimator = ValueAnimator.ofFloat(
                 slidingButtonIv.x,
-                (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
+                ((buttonSwipeableView.width + viewMarginWidth(buttonSwipeableView)) - slidingButtonIv.width).toFloat()
         )
         positionAnimator.duration = animationDuration
         positionAnimator.addUpdateListener {
@@ -496,6 +497,11 @@ open class SwipeableButton @JvmOverloads constructor(
         positionAnimator.interpolator = AccelerateDecelerateInterpolator()
         animatorSet.playTogether(animations)
         animatorSet.start()*/
+    }
+
+    private fun viewMarginWidth(view: View): Int {
+        val marginParams = view.layoutParams as MarginLayoutParams
+        return marginParams.marginEnd + marginParams.marginStart
     }
 
     /**
