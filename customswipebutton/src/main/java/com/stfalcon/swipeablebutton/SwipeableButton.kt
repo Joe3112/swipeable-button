@@ -420,6 +420,24 @@ open class SwipeableButton @JvmOverloads constructor(
      * Move the button to the end with the state changing (with animation)
      * */
     private fun animateToggleToEnd() {
+        val positionAnimator = ValueAnimator.ofFloat(
+                slidingButtonIv.x,
+                (buttonSwipeableView.width - slidingButtonIv.width).toFloat()
+        )
+        positionAnimator.duration = animationDuration
+        positionAnimator.addUpdateListener {
+            slidingButtonIv.x = positionAnimator.animatedValue as Float
+        }
+        positionAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                onSwipedOnListener?.invoke()
+                onSwipedListener?.invoke()
+            }
+        })
+        positionAnimator.start()
+        return
+
+        /*
         val animatorSet = AnimatorSet()
 
         animateBackgroundChange(StateChangeDirection.UNCHECKED_CHECKED)
@@ -477,7 +495,7 @@ open class SwipeableButton @JvmOverloads constructor(
 
         positionAnimator.interpolator = AccelerateDecelerateInterpolator()
         animatorSet.playTogether(animations)
-        animatorSet.start()
+        animatorSet.start()*/
     }
 
     /**

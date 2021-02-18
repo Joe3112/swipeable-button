@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            app:durationAnimation="150"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="64dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
